@@ -12,3 +12,10 @@
 - Presented by Genelle Denzin
 - Talked about takeaways from the `rstudio::conf` 2019.    
 - Slides are available under `20190222_rstudioconf2019`
+
+
+## 03/14/2019 Introduction to ggplot2 Vol2
+
+- Presented by Ezgi Karaesmen
+- Talked about plot customization with `theme()` as well as making histograms, barplots, boxplots, dotplots and adding errorbars  
+- Materials are available under `20190314_ggplot2Vol2`
