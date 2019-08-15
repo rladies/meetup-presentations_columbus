@@ -1,0 +1,203 @@
+---
+title: "useR! 2019 Recap"
+author: "Ezgi Karaesmen & Katie Sasso-Schafer"
+date: "`r format(Sys.time(), '%a %b %d %Y')`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE, message=FALSE)
+#devtools::install_github("tidyverse/tidyr")
+#devtools::install_github("chrk623/dataAnim")
+```
+
+## Introduction
+
+This is a summary of interesting packages/function we learned at useR! 2019 conference. All presentations are still available at the conference website and can be found here: [user2019.fr/talk_schedule](http://www.user2019.fr/talk_schedule/)
+
+## Selected talks
+
+### Package flextable: a grammar to produce tabular reporting from R - Quentin Fazilleau
+
+See details [davidgohel.github.io/flextable/articles/format.html](https://davidgohel.github.io/flextable/articles/format.html)
+
+```{r}
+library(flextable)
+library(tidyverse)
+library(tidyr)
+library(usethis)
+
+ft <- flextable(head(mtcars))
+ft <- color(ft, i = ~ drat > 3, j = ~ vs + am, color = "red")
+ft <- bg(ft, i = ~ wt < 3, j = ~ mpg, bg = "#EFEF99")
+ft <- bold(ft, i = 2:4, j = "cyl", bold = TRUE)
+ft
+```
+
+
+### Connecting R/R Markdown and Microsoft Word using StatTag for Collaborative Reproducibility - Leah Welty
+
+<iframe width="800" height="400" align="middle"  src="https://www.youtube.com/embed/K3QwG4LB9a4" frameborder="0" allowfullscreen></iframe>
+
+
+To download and get more details on how to use it go to https://sites.northwestern.edu/stattag/
+
+### `auth0`: Secure Authentication in Shiny with Auth0 - Julio Trecenti
+
+Free autehtication service for Shiny apps!   
+See [github.com/curso-r/auth0](https://github.com/curso-r/auth0)
+
+### ggwordcloud: a word cloud geometry for ggplot2 - Erwan Le Pennec
+
+https://github.com/lepennec/ggwordcloud
+
+```{r}
+library(ggwordcloud)
+data("love_words_small")
+head(love_words_small)
+
+set.seed(42)
+ggplot(love_words_small, aes(label = word, size = speakers)) +
+  geom_text_wordcloud() +
+  theme_minimal()
+```
+
+### mlr3: A new modular framework for machine learning with R - Michel Lang
+
+Nice alternative to Caret
+
+[Github](https://github.com/mlr-org/mlr3)
+
+[Book (work in progress)](https://mlr3book.mlr-org.com/use-cases.html)
+
+## Tidyverse news
+
+### n() cool #dplyr things - Romain Francois
+
+[slides](https://speakerdeck.com/romainfrancois/n-cool-number-dplyr-things)
+
+Group function updates
+```{r}
+?group_modify
+?group_split
+```
+
+Column wise
+
+- Replace group_by and summarise. Action and selection at the same time is what you do with group_by and summarise
+- Which summarise_at we can separate concept of selection and function 
+    + Less error prone. Only have to change the function in one place 
+    + Can do this with your own function 
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise_at(
+    vars(contains("Petal"), contains("Sepal")),
+         mean)
+
+```
+
+
+
+### DRY out your workflow with the usethis package - Jenny Bryan
+
+Workflow functions directly to be called 
+```{r}
+?create_package()
+?create_project()
+```
+
+use_this demo videos
+
+```{r}
+?use_github()
+?use_mit_license()
+
+```
+
+good functions for workshops and teaching 
+
+```{r}
+?usethis::use_course()
+?usethis::use_zip()
+```
+
+### Reusing tidyverse code, the easy way - Lionel Henry
+
+**Tidy Eval** 
+
+- Powers data masking from the rlang package 
+- Flexible and robust 
+- `{{2 + 2}}` replacing !! and enquo
+
+- Need latest version of rlang
+
+[tidyeval](https://tidyeval.tidyverse.org/)
+
+
+[slides here](https://speakerdeck.com/lionelhenry/reusing-tidyverse-code)
+
+
+
+### Enhancements to data tidying - Hadley Wickham 
+
+New versions of gather and spread!
+
+- Two key tidyr functions for solving
+  + pivot_longer (previously gather) columns
+  + pivot_wider  (previously spread)
+- Available on github for now
+
+<iframe width="800" height="400" src="https://tidyr.tidyverse.org/dev/articles/pivot.html" frameborder="0" allowfullscreen></iframe>
+
+Example
+
+```{r}
+# devtools::install_github("tidyverse/tidyr")
+# devtools::install_github("chrk623/dataAnim")
+library(dataAnim)
+library(tidyr)
+
+#pivot_longer
+datoy_wide
+
+datoy_wide %>% 
+  pivot_longer(cols = English:Maths, names_to = 'Subject',
+             values_to = "Score")
+  
+#pivot_wider
+datoy_long
+
+datoy_long %>% 
+  pivot_wider(names_from = Subject, values_from = Score)
+
+```
+
+
+Animations to show what they do  in dataAnim
+
+```{r}
+# devtools::install_github("tidyverse/tidyr")
+# devtools::install_github("chrk623/dataAnim")
+
+library(dataAnim)
+gather_anim(
+   key = "Subject",
+   value = "Score",
+   col = c("English", "Maths"),
+   data = datoy_wide
+ )
+```
+
+
+
+
+
+
+
